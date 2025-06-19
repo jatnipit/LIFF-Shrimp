@@ -31,13 +31,16 @@ const goBack = () => {
 };
 
 const confirmPayment = () => {
-  console.log($liff.isInClient());
-  if (!$liff.isInClient()) {
-    window.alert(
-      "This button is unavailable as LIFF is currently being opened in an external browser."
-    );
+  const { userAgent } = navigator;
+  if (!$liff.isInClient() && userAgent.includes("Line")) {
+    redirect();
   } else {
     $liff.closeWindow();
   }
+};
+
+const redirect = async () => {
+  const liffUrl = await $liff.permanentLink.createUrlBy(window.location.href);
+  window.location = liffUrl;
 };
 </script>
