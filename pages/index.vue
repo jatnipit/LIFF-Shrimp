@@ -22,6 +22,8 @@
 </template>
 
 <script setup>
+const { $liff } = useNuxtApp();
+
 const menuItems = ref([
   {
     id: 1,
@@ -77,34 +79,9 @@ const menuItems = ref([
     image:
       "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400&h=300&fit=crop",
   },
-  {
-    id: 7,
-    name: "Fish Tacos",
-    price: 13.99,
-    description:
-      "Grilled fish with fresh salsa, cabbage slaw, and lime crema in soft corn tortillas.",
-    image:
-      "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
-  },
-  {
-    id: 8,
-    name: "Mushroom Risotto",
-    price: 16.99,
-    description:
-      "Creamy arborio rice with mixed mushrooms, white wine, and parmesan cheese.",
-    image:
-      "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=400&h=300&fit=crop",
-  },
-  {
-    id: 9,
-    name: "Thai Green Curry",
-    price: 14.99,
-    description:
-      "Aromatic green curry with coconut milk, vegetables, and your choice of protein, served with jasmine rice.",
-    image:
-      "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&h=300&fit=crop",
-  },
 ]);
+
+// const profile = await $liff.getProfile();
 
 const handleOrder = (menuItem) => {
   navigateTo(

@@ -6,9 +6,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const liffId = config.public.liffId;
 
   try {
-    await liff.init({ liffId });
+    await liff.init({ liffId: liffId });
 
-    if (!liff.isLoggedIn) {
+    if (!liff.isLoggedIn()) {
       liff.login();
     }
 

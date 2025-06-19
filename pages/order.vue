@@ -121,7 +121,7 @@ const handleSubmit = () => {
     address: form.value,
   });
 
-  router.push("/payment-selection");
+  router.push({ path: "/payment-selection", query: route.query });
 };
 
 const goBack = () => {
