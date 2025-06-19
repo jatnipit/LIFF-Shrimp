@@ -32,10 +32,12 @@ const goBack = () => {
 
 const confirmPayment = () => {
   console.log($liff.isInClient());
-  if ($liff.isInClient()) {
-    $liff.closeWindow();
+  if (!$liff.isInClient()) {
+    window.alert(
+      "This button is unavailable as LIFF is currently being opened in an external browser."
+    );
   } else {
-    window.close();
+    $liff.closeWindow();
   }
 };
 </script>
