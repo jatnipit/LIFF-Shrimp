@@ -14,7 +14,7 @@
           {{ menuItem.name }}
         </h3>
         <span class="text-lg font-bold text-green-600">
-          ${{ menuItem.price.toFixed(2) }}
+          {{ menuItem.price.toFixed(2) }} บาท
         </span>
       </div>
 
@@ -26,7 +26,7 @@
         @click="handleOrderClick"
         class="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-md"
       >
-        Order Now
+        สั่งเลย
       </button>
     </div>
   </div>

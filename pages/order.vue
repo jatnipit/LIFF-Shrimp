@@ -1,18 +1,18 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <header class="bg-white shadow-sm">
-      <div class="max-w-3xl mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold text-gray-900">รายละเอียดการจัดส่ง</h1>
-        <p v-if="orderItem" class="text-gray-600 mt-2">
-          Order: {{ orderItem.name }} - ${{ orderItem.price }}
+      <div class="px-4 py-4">
+        <h1 class="text-xl font-bold text-gray-900">รายละเอียดการจัดส่ง</h1>
+        <p v-if="orderItem" class="text-gray-600 mt-1 text-sm">
+          Order: {{ orderItem.name }} - {{ orderItem.price }} บาท
         </p>
       </div>
     </header>
 
-    <main class="max-w-3xl mx-auto px-4 py-8">
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <form @submit.prevent="handleSubmit">
-          <div class="mb-4">
+    <main class="px-4 py-4">
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <form @submit.prevent="handleSubmit" class="space-y-4">
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
               ชื่อ-นามสกุลผู้รับ:
             </label>
@@ -20,23 +20,23 @@
               v-model="form.fullName"
               type="text"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
             />
           </div>
 
-          <div class="mb-4">
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
               เบอร์โทรศัพท์มือถือ:
             </label>
             <input
               v-model="form.phoneNumber"
-              type="text"
+              type="tel"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
             />
           </div>
 
-          <div class="mb-4">
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
               จังหวัด/เขต(อำเภอ)/แขวง(ตำบล):
             </label>
@@ -44,22 +44,22 @@
               v-model="form.addressLine1"
               type="text"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
             />
           </div>
 
-          <div class="mb-4">
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
               ถนน/ชื่ออาคาร:
             </label>
             <input
               v-model="form.addressLine2"
               type="text"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
             />
           </div>
 
-          <div class="mb-4">
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
               รหัสไปรษณีย์:
             </label>
@@ -67,23 +67,23 @@
               v-model="form.zipPostalCode"
               type="text"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
             />
           </div>
 
-          <div class="flex gap-4">
+          <div class="space-y-3 pt-4">
+            <button
+              type="submit"
+              class="w-full bg-orange-500 text-white font-medium py-3 px-4 rounded-md text-base"
+            >
+              ชำระเงิน
+            </button>
             <button
               type="button"
               @click="goBack"
-              class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md"
+              class="w-full bg-gray-500 text-white font-medium py-3 px-4 rounded-md text-base"
             >
-              Back to Menu
-            </button>
-            <button
-              type="submit"
-              class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-md"
-            >
-              Place Order
+              กลับสู่หน้าหลัก
             </button>
           </div>
         </form>
@@ -121,7 +121,7 @@ const handleSubmit = () => {
     address: form.value,
   });
 
-  router.push("/");
+  router.push("/payment-selection");
 };
 
 const goBack = () => {

@@ -1,15 +1,15 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <header class="bg-white shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 class="text-3xl font-bold text-gray-900 text-center">
+      <div class="px-4 py-4">
+        <h1 class="text-2xl font-bold text-gray-900 text-center">
           ร้านกุ้งเต้น
         </h1>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <main class="px-4 py-4">
+      <div class="space-y-4">
         <CardMenu
           v-for="item in menuItems"
           :key="item.id"
@@ -26,7 +26,7 @@ const menuItems = ref([
   {
     id: 1,
     name: "Margherita Pizza",
-    price: 12.99,
+    price: 50,
     description:
       "Classic pizza with fresh tomatoes, mozzarella cheese, and basil leaves on a crispy thin crust.",
     image:
@@ -35,7 +35,7 @@ const menuItems = ref([
   {
     id: 2,
     name: "Grilled Salmon",
-    price: 18.99,
+    price: 40,
     description:
       "Fresh Atlantic salmon grilled to perfection, served with lemon butter sauce and seasonal vegetables.",
     image:
@@ -44,7 +44,7 @@ const menuItems = ref([
   {
     id: 3,
     name: "Chicken Caesar Salad",
-    price: 14.99,
+    price: 40,
     description:
       "Crisp romaine lettuce, grilled chicken breast, parmesan cheese, croutons with our homemade Caesar dressing.",
     image:
@@ -53,7 +53,7 @@ const menuItems = ref([
   {
     id: 4,
     name: "Beef Burger Deluxe",
-    price: 15.99,
+    price: 40,
     description:
       "Juicy beef patty with lettuce, tomato, cheese, pickles, and our special sauce on a brioche bun.",
     image:
@@ -62,7 +62,7 @@ const menuItems = ref([
   {
     id: 5,
     name: "Pasta Carbonara",
-    price: 13.99,
+    price: 40,
     description:
       "Creamy pasta with pancetta, eggs, parmesan cheese, and black pepper. A Roman classic!",
     image:
@@ -71,7 +71,7 @@ const menuItems = ref([
   {
     id: 6,
     name: "Chocolate Lava Cake",
-    price: 8.99,
+    price: 50,
     description:
       "Warm chocolate cake with a molten center, served with vanilla ice cream and fresh berries.",
     image:
