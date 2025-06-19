@@ -121,7 +121,10 @@ const handleSubmit = () => {
     address: form.value,
   });
 
-  router.push({ path: "/payment-selection", query: route.query });
+  router.push({
+    path: "/payment-selection",
+    query: { ...route.query, address: JSON.stringify(form.value) },
+  });
 };
 
 const goBack = () => {

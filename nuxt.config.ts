@@ -44,6 +44,9 @@ export default defineNuxtConfig({
   vite: {
     server: {
       allowedHosts: true,
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
     },
   },
 });

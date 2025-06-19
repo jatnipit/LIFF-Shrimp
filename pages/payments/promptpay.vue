@@ -30,17 +30,49 @@ const goBack = () => {
   router.back();
 };
 
-const confirmPayment = () => {
-  const { userAgent } = navigator;
-  if (!$liff.isInClient() && userAgent.includes("Line")) {
-    redirect();
-  } else {
-    $liff.closeWindow();
+const sendOrderToN8N = async () => {
+  try {
+    const orderData = {
+      order: {
+        id: route.query.item,
+        name: decodeURIComponent(route.query.name),
+        price: route.query.price,
+      },
+      address: JSON.parse(route.query.address),
+      paymentMethod: "promptpay",
+      timestamp: new Date().toISOString(),
+    };
+
+    const response = await fetch(
+      "https://jatnipit-k.app.n8n.cloud/webhook-test/ebb0e9b2-897c-4b73-b871-7e2d221b6a3e",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Response is not OK");
+    }
+
+    console.log("Order data sent successfully");
+  } catch (error) {
+    console.error("Error sending data: ", error);
   }
 };
 
-const redirect = async () => {
-  const liffUrl = await $liff.permanentLink.createUrlBy(window.location.href);
-  window.location = liffUrl;
+const confirmPayment = async () => {
+  await sendOrderToN8N();
+
+  if (!$liff.isInClient()) {
+    window.alert(
+      "This button is unavailable as LIFF is currently being opened in an external browser."
+    );
+  } else {
+    $liff.closeWindow();
+  }
 };
 </script>
