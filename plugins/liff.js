@@ -9,7 +9,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const redirect = async () => {
     const liffUrl = await liff.permanentLink.createUrlBy(window.location.href);
-    window.location = liffUrl;
+    window.location.href = liffUrl;
   };
 
   try {

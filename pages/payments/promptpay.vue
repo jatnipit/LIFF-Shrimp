@@ -2,6 +2,10 @@
   <main>
     <PromptpayQR :amount="Number(price)" />
 
+    <div>
+      <input type="image" src="" alt="">
+    </div>
+
     <div class="space-y-3 p-6">
       <button
         @click="confirmPayment"
@@ -46,12 +50,13 @@ const sendOrderToN8N = async () => {
 
     const orderData = {
       userId: route.query.userId,
+      userName: route.query.userName,
       order: {
         id: route.query.item,
         name: decodeURIComponent(route.query.name),
         price: route.query.price,
       },
-      address: JSON.parse(route.query.address),
+      address: route.query.address,
       paymentMethod: "พร้อมเพย์",
       timestamp: timestamp,
     };

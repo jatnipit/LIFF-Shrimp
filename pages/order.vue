@@ -10,83 +10,47 @@
     </header>
 
     <main class="px-4 py-4">
-      <div class="bg-white rounded-lg shadow-md p-4">
-        <form @submit.prevent="handleSubmit" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              ชื่อ-นามสกุลผู้รับ:
-            </label>
-            <input
-              v-model="form.fullName"
-              type="text"
-              required
-              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
-            />
-          </div>
+      <LocationStatus
+        :loading="loading"
+        :error="error"
+        :location="location"
+        :address="address"
+        @retry="getCurrentLocation"
+      />
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              เบอร์โทรศัพท์มือถือ:
-            </label>
-            <input
-              v-model="form.phoneNumber"
-              type="tel"
-              required
-              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
-            />
-          </div>
+      <LocationMap :location="location" />
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              จังหวัด/เขต(อำเภอ)/แขวง(ตำบล):
-            </label>
-            <input
-              v-model="form.addressLine1"
-              type="text"
-              required
-              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
-            />
-          </div>
+      <div class="space-y-3 pt-4">
+        <button
+          v-if="!loading && !location"
+          @click="getCurrentLocation"
+          class="w-full bg-blue-500 text-white font-medium py-3 px-4 rounded-md text-base"
+        >
+          ค้นหาตำแหน่งของฉัน
+        </button>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              ถนน/ชื่ออาคาร:
-            </label>
-            <input
-              v-model="form.addressLine2"
-              type="text"
-              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
-            />
-          </div>
+        <div v-if="location" class="space-y-3 pt-4">
+          <button
+            @click="getCurrentLocation"
+            class="w-full bg-green-500 text-white font-medium py-3 px-4 rounded-md text-base"
+          >
+            อัปเดตตำแหน่ง
+          </button>
+          <button
+            @click="confirmLocation"
+            class="w-full bg-orange-500 text-white font-medium py-3 px-4 rounded-md text-base"
+          >
+            ยืนยันตำแหน่ง
+          </button>
+        </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              รหัสไปรษณีย์:
-            </label>
-            <input
-              v-model="form.zipPostalCode"
-              type="text"
-              required
-              class="w-full px-3 py-3 border border-gray-300 rounded-md text-base"
-            />
-          </div>
-
-          <div class="space-y-3 pt-4">
-            <button
-              type="submit"
-              class="w-full bg-orange-500 text-white font-medium py-3 px-4 rounded-md text-base"
-            >
-              ชำระเงิน
-            </button>
-            <button
-              type="button"
-              @click="goBack"
-              class="w-full bg-gray-500 text-white font-medium py-3 px-4 rounded-md text-base"
-            >
-              กลับสู่หน้าหลัก
-            </button>
-          </div>
-        </form>
+        <button
+          type="button"
+          @click="goBack"
+          class="w-full bg-gray-500 text-white font-medium py-3 px-4 rounded-md text-base"
+        >
+          กลับสู่หน้าหลัก
+        </button>
       </div>
     </main>
   </div>
@@ -107,33 +71,25 @@ const orderItem = computed(() => {
   return null;
 });
 
-const form = ref({
-  fullName: "",
-  phoneNumber: "",
-  addressLine1: "",
-  addressLine2: "",
-  zipPostalCode: "",
-});
-
-const handleSubmit = () => {
-  console.log("Order submitted:", {
-    order: orderItem.value,
-    address: form.value,
-  });
-
+const confirmLocation = () => {
   router.push({
     path: "/payment-selection",
-    query: { ...route.query, address: JSON.stringify(form.value) },
+    query: { ...route.query, address: address.value },
   });
 };
-
-const getLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition()
-  }
-}
 
 const goBack = () => {
   router.push("/");
 };
+
+const { location, address, loading, error, getCurrentLocation } =
+  useGeolocation();
+
+onMounted(() => {
+  getCurrentLocation();
+});
+
+// useHead({
+//   title: "ตำแหน่งของคุณ",
+// });
 </script>

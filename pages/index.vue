@@ -81,7 +81,7 @@ const userName = profile.displayName;
 
 const handleOrder = (menuItem) => {
   navigateTo(
-    `/order?userId=${userId}&item=${menuItem.id}&name=${encodeURIComponent(userName)}&price=${menuItem.price}`
+    `/order?userId=${userId}&userName=${userName}&item=${menuItem.id}&name=${encodeURIComponent(menuItem.name)}&price=${menuItem.price}`
   );
 };
 </script>

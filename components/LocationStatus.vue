@@ -15,12 +15,6 @@
     </div>
 
     <div v-else-if="location" class="space-y-2">
-      <div class="text-sm text-gray-600">
-        <strong>ละติจูด:</strong> {{ location.lat.toFixed(6) }}
-      </div>
-      <div class="text-sm text-gray-600">
-        <strong>ลองจิจูด:</strong> {{ location.lng.toFixed(6) }}
-      </div>
       <div v-if="address" class="text-sm text-gray-600">
         <strong>ที่อยู่:</strong> {{ address }}
       </div>
