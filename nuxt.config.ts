@@ -39,6 +39,7 @@ export default defineNuxtConfig({
 
   ngrok: {
     authtoken_from_env: true,
+    domain: "toucan-loving-slowly.ngrok-free.app",
   },
 
   vite: {

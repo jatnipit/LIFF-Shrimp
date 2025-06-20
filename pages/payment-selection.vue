@@ -63,16 +63,16 @@
 const route = useRoute();
 const router = useRouter();
 
-const orderItem = computed(() => {
-  if (route.query.item && route.query.name && route.query.price) {
-    return {
-      id: route.query.item,
-      name: decodeURIComponent(route.query.name),
-      price: route.query.price,
-    };
-  }
-  return null;
-});
+// const orderItem = computed(() => {
+//   if (route.query.item && route.query.name && route.query.price) {
+//     return {
+//       id: route.query.item,
+//       name: decodeURIComponent(route.query.name),
+//       price: route.query.price,
+//     };
+//   }
+//   return null;
+// });
 
 const selectPromptPay = () => {
   const query = route.query;

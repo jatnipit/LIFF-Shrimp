@@ -127,6 +127,12 @@ const handleSubmit = () => {
   });
 };
 
+const getLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition()
+  }
+}
+
 const goBack = () => {
   router.push("/");
 };

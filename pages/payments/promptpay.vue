@@ -32,15 +32,28 @@ const goBack = () => {
 
 const sendOrderToN8N = async () => {
   try {
+    const now = new Date();
+    const timestamp = now
+      .toLocaleString("th-TH", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", "/");
+
     const orderData = {
+      userId: route.query.userId,
       order: {
         id: route.query.item,
         name: decodeURIComponent(route.query.name),
         price: route.query.price,
       },
       address: JSON.parse(route.query.address),
-      paymentMethod: "promptpay",
-      timestamp: new Date().toISOString(),
+      paymentMethod: "พร้อมเพย์",
+      timestamp: timestamp,
     };
 
     const response = await fetch(

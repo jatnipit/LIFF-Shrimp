@@ -27,65 +27,61 @@ const { $liff } = useNuxtApp();
 const menuItems = ref([
   {
     id: 1,
-    name: "Margherita Pizza",
+    name: "ข้าวผัดกุ้ง",
     price: 50,
     description:
-      "Classic pizza with fresh tomatoes, mozzarella cheese, and basil leaves on a crispy thin crust.",
-    image:
-      "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=400&h=300&fit=crop",
+      "ข้าวผัดสุดฟิน รสชาติจัดจ้าน ผัดกับกุ้งสดเนื้อแน่น หอมกระทะทุกคำ เสิร์ฟพร้อมมะนาวและผักเคียง",
+    image: "/images/ข้าวผัดกุ้ง.jpg",
   },
   {
     id: 2,
-    name: "Grilled Salmon",
+    name: "กะเพราหมูกรอบ",
     price: 40,
     description:
-      "Fresh Atlantic salmon grilled to perfection, served with lemon butter sauce and seasonal vegetables.",
-    image:
-      "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
+      "หมูกรอบจัดเต็ม ผัดกับพริกกระเทียมหอมๆ และใบกะเพราสด รสเผ็ดจัดจ้านถึงใจในแบบไทยแท้",
+    image: "/images/กะเพราหมูกรอบ.jpg",
   },
   {
     id: 3,
-    name: "Chicken Caesar Salad",
+    name: "ผัดไทยกุ้งสด",
     price: 40,
     description:
-      "Crisp romaine lettuce, grilled chicken breast, parmesan cheese, croutons with our homemade Caesar dressing.",
-    image:
-      "https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400&h=300&fit=crop",
+      "เส้นเหนียวนุ่ม ผัดคลุกซอสเข้มข้น พร้อมกุ้งสดตัวโต โรยถั่วลิสงบด เสิร์ฟร้อนๆ หอมเตะจมูก",
+    image: "/images/ผัดไทยกุ้งสด.jpg",
   },
   {
     id: 4,
-    name: "Beef Burger Deluxe",
+    name: "ข้าวไข่เจียวหมูสับ",
     price: 40,
     description:
-      "Juicy beef patty with lettuce, tomato, cheese, pickles, and our special sauce on a brioche bun.",
-    image:
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop",
+      "ไข่เจียวฟูกรอบ หมูสับแน่นเต็มคำ เสิร์ฟบนข้าวสวยร้อนๆ กินง่าย อร่อยได้ทุกวัน",
+    image: "/images/ข้าวไข่เจียวหมูสับ.png",
   },
   {
     id: 5,
-    name: "Pasta Carbonara",
+    name: "ราดหน้าหมูหมัก",
     price: 40,
     description:
-      "Creamy pasta with pancetta, eggs, parmesan cheese, and black pepper. A Roman classic!",
-    image:
-      "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=400&h=300&fit=crop",
+      "เส้นใหญ่เหนียวนุ่ม ราดซอสเข้มข้น กลมกล่อม พร้อมหมูหมักนุ่มละลายในปาก เสิร์ฟร้อนจานต่อจาน",
+    image: "/images/ราดหน้าหมูหมัก.jpg",
   },
   {
     id: 6,
-    name: "Chocolate Lava Cake",
+    name: "ข้าวหมูทอดกระเทียม",
     price: 50,
     description:
-      "Warm chocolate cake with a molten center, served with vanilla ice cream and fresh berries.",
-    image:
-      "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400&h=300&fit=crop",
+      "หมูทอดหมักเครื่องจนเข้าเนื้อ เจียวกระเทียมหอมๆ โรยหน้าแน่นๆ เสิร์ฟคู่ข้าวสวยร้อน",
+    image: "/images/ข้าวหมูทอดกระเทียม.jpg",
   },
 ]);
 
-// const profile = await $liff.getProfile();
+const profile = await $liff.getProfile();
+const userId = profile.userId;
+const userName = profile.displayName;
 
 const handleOrder = (menuItem) => {
   navigateTo(
-    `/order?item=${menuItem.id}&name=${encodeURIComponent(menuItem.name)}&price=${menuItem.price}`
+    `/order?userId=${userId}&item=${menuItem.id}&name=${encodeURIComponent(userName)}&price=${menuItem.price}`
   );
 };
 </script>
