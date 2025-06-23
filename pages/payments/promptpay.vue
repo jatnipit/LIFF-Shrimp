@@ -1,25 +1,56 @@
 <template>
   <main>
-    <PromptpayQR :amount="Number(price)" />
+    <PromptpayQR v-if="!hasUploadedImage" :amount="Number(price)" />
 
-    <div>
-      <input type="image" src="" alt="">
+    <div v-if="hasUploadedImage" class="p-4 text-center">
+      <h2 class="text-xl font-bold mb-4">สลิปการชำระเงิน</h2>
+      <div class="flex justify-center">
+        <img
+          :src="uploadedImagePreview"
+          alt="Payment Receipt"
+          class="w-64 h-64 object-contain border border-gray-300 rounded-md"
+        />
+      </div>
+      <p class="mt-2">ยอดชำระ: {{ price }} บาท</p>
     </div>
 
+    <UploadReceipt
+      ref="uploadReceiptRef"
+      @upload="handleImageUpload"
+      @file-selected="handleFileSelection"
+      @clear-selection="handleImageClear"
+    />
     <div class="space-y-3 p-6">
       <button
         @click="confirmPayment"
-        class="w-full bg-orange-500 text-white font-medium py-3 px-4 rounded-md text-base"
+        :disabled="isProcessing"
+        :class="[
+          'w-full font-medium py-3 px-4 rounded-md text-base',
+          isProcessing
+            ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+            : 'bg-orange-500 text-white hover:bg-orange-600',
+        ]"
       >
-        ยืนยันการชำระเงิน
+        {{ isProcessing ? "กำลังดำเนินการ..." : "ยืนยันการชำระเงิน" }}
       </button>
 
       <button
         @click="goBack"
-        class="w-full bg-gray-500 text-white font-medium py-3 px-4 rounded-md text-base"
+        :disabled="isProcessing"
+        class="w-full bg-gray-500 text-white font-medium py-3 px-4 rounded-md text-base hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
         ย้อนกลับ
       </button>
+    </div>
+
+    <div v-if="statusMessage" class="p-4 text-center">
+      <p
+        :class="
+          statusMessage.type === 'error' ? 'text-red-600' : 'text-green-600'
+        "
+      >
+        {{ statusMessage.text }}
+      </p>
     </div>
   </main>
 </template>
@@ -30,11 +61,39 @@ const route = useRoute();
 const router = useRouter();
 const price = computed(() => route.query.price || 0);
 
+const uploadReceiptRef = ref(null);
+const uploadedImageUrl = ref(null);
+const uploadedImagePreview = ref(null);
+const selectedFile = ref(null);
+const isProcessing = ref(false);
+const statusMessage = ref(null);
+
+const hasUploadedImage = computed(() => !!uploadedImagePreview.value);
+
 const goBack = () => {
-  router.back();
+  if (!isProcessing.value) {
+    router.back();
+  }
 };
 
-const sendOrderToN8N = async () => {
+const handleFileSelection = (file, previewUrl) => {
+  selectedFile.value = file;
+  uploadedImagePreview.value = previewUrl;
+  statusMessage.value = null;
+};
+
+const handleImageUpload = (url) => {
+  uploadedImageUrl.value = url;
+};
+
+const handleImageClear = () => {
+  uploadedImageUrl.value = null;
+  uploadedImagePreview.value = null;
+  selectedFile.value = null;
+  statusMessage.value = null;
+};
+
+const sendOrderToN8N = async (imageUrl = null) => {
   try {
     const now = new Date();
     const timestamp = now
@@ -59,6 +118,7 @@ const sendOrderToN8N = async () => {
       address: route.query.address,
       paymentMethod: "พร้อมเพย์",
       timestamp: timestamp,
+      receiptUrl: imageUrl || null,
     };
 
     const response = await fetch(
@@ -73,24 +133,56 @@ const sendOrderToN8N = async () => {
     );
 
     if (!response.ok) {
-      throw new Error("Response is not OK");
+      throw new Error("Failed to send order data");
     }
 
     console.log("Order data sent successfully");
   } catch (error) {
     console.error("Error sending data: ", error);
+    throw error;
   }
 };
 
 const confirmPayment = async () => {
-  await sendOrderToN8N();
+  if (isProcessing.value) return;
 
-  if (!$liff.isInClient()) {
-    window.alert(
-      "This button is unavailable as LIFF is currently being opened in an external browser."
-    );
-  } else {
-    $liff.closeWindow();
+  if (!hasUploadedImage.value) {
+    alert("กรุณาอัปโหลดสลิปการชำระเงินก่อนยืนยัน");
+    return;
+  }
+
+  isProcessing.value = true;
+  statusMessage.value = null;
+
+  try {
+    let receiptUrl = null;
+
+    if (uploadReceiptRef.value?.hasFile) {
+      statusMessage.value = { type: "info", text: "กำลังอัปโหลดสลิป..." };
+      receiptUrl = await uploadReceiptRef.value.uploadFile();
+    }
+
+    statusMessage.value = {
+      type: "info",
+      text: "กำลังส่งข้อมูลการสั่งซื้อ...",
+    };
+    await sendOrderToN8N(receiptUrl);
+
+    statusMessage.value = { type: "success", text: "ยืนยันการชำระเงินสำเร็จ!" };
+
+    if (!$liff.isInClient()) {
+      window.alert("การชำระเงินได้รับการยืนยันแล้ว");
+    } else {
+      $liff.closeWindow();
+    }
+  } catch (error) {
+    console.error("Error during payment confirmation:", error);
+    statusMessage.value = {
+      type: "error",
+      text: "เกิดข้อผิดพลาดในการยืนยันการชำระเงิน กรุณาลองใหม่อีกครั้ง",
+    };
+  } finally {
+    isProcessing.value = false;
   }
 };
 </script>
