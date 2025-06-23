@@ -16,15 +16,6 @@
     <p v-if="selectedFileName" class="text-sm text-gray-600">
       Selected: {{ selectedFileName }}
     </p>
-    <p
-      v-if="uploadStatus"
-      class="text-sm"
-      :class="
-        uploadStatus.type === 'success' ? 'text-green-600' : 'text-red-600'
-      "
-    >
-      {{ uploadStatus.message }}
-    </p>
   </div>
 </template>
 
@@ -33,7 +24,6 @@ const fileInput = ref(null);
 const selectedFile = ref(null);
 const previewUrl = ref(null);
 const selectedFileName = ref(null);
-const uploadStatus = ref(null);
 
 const emit = defineEmits(["upload", "file-selected", "clear-selection"]);
 
@@ -53,7 +43,6 @@ const handleFileSelection = (event) => {
 
   selectedFile.value = file;
   selectedFileName.value = file.name;
-  uploadStatus.value = null;
 
   if (previewUrl.value) {
     URL.revokeObjectURL(previewUrl.value);
@@ -68,20 +57,20 @@ const uploadFile = async () => {
     throw new Error("No file selected");
   }
 
-  uploadStatus.value = { type: "info", message: "กำลังอัปโหลด..." };
-
   const formData = new FormData();
   formData.append("image", selectedFile.value);
 
   try {
     const response = await fetch("/api/upload", {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
       method: "POST",
       body: formData,
     });
 
     if (response.ok) {
       const data = await response.json();
-      uploadStatus.value = { type: "success", message: "อัปโหลดสำเร็จ!" };
       emit("upload", data.imageUrl);
       return data.imageUrl;
     } else {
@@ -89,10 +78,6 @@ const uploadFile = async () => {
     }
   } catch (error) {
     console.error("Error uploading image:", error);
-    uploadStatus.value = {
-      type: "error",
-      message: "อัปโหลดไฟล์ไม่สำเร็จ กรุณาลองใหม่",
-    };
     throw error;
   }
 };
@@ -100,7 +85,6 @@ const uploadFile = async () => {
 const clearSelection = () => {
   selectedFile.value = null;
   selectedFileName.value = null;
-  uploadStatus.value = null;
 
   if (previewUrl.value) {
     URL.revokeObjectURL(previewUrl.value);

@@ -19,6 +19,10 @@ export default defineNuxtConfig({
       src: "~/plugins/liff.js",
       mode: "client",
     },
+    {
+      src: "~/plugins/ngrok",
+      mode: "all", // or "client" or "server" as needed
+    },
   ],
 
   ssr: false,
@@ -26,6 +30,7 @@ export default defineNuxtConfig({
     public: {
       liffId: process.env.LIFF_ID,
       promptpayPhoneNumber: process.env.PROMPTPAY_PHONE_NUMBER,
+      ngrokDomain: process.env.NGROK_DOMAIN,
     },
   },
 

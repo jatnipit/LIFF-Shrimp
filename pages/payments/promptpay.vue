@@ -119,6 +119,7 @@ const sendOrderToN8N = async (imageUrl = null) => {
       paymentMethod: "พร้อมเพย์",
       timestamp: timestamp,
       receiptUrl: imageUrl || null,
+      requestType: "order",
     };
 
     const response = await fetch(
@@ -155,17 +156,14 @@ const confirmPayment = async () => {
   statusMessage.value = null;
 
   try {
-    let receiptUrl = null;
+    let receiptUrl = useRuntimeConfig().public.ngrokDomain;
 
     if (uploadReceiptRef.value?.hasFile) {
       statusMessage.value = { type: "info", text: "กำลังอัปโหลดสลิป..." };
-      receiptUrl = await uploadReceiptRef.value.uploadFile();
+      const imagePath = await uploadReceiptRef.value.uploadFile();
+      receiptUrl = receiptUrl + imagePath;
     }
 
-    statusMessage.value = {
-      type: "info",
-      text: "กำลังส่งข้อมูลการสั่งซื้อ...",
-    };
     await sendOrderToN8N(receiptUrl);
 
     statusMessage.value = { type: "success", text: "ยืนยันการชำระเงินสำเร็จ!" };

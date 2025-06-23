@@ -75,13 +75,21 @@ const menuItems = ref([
   },
 ]);
 
-const profile = await $liff.getProfile();
-const userId = profile.userId;
-const userName = profile.displayName;
+const userId = ref("");
+const userName = ref("");
+const profile = await $liff
+  .getProfile()
+  .then((profile) => {
+    userId.value = profile.userId;
+    userName.value = profile.displayName;
+  })
+  .catch((err) => {
+    console.log("error", err);
+  });
 
 const handleOrder = (menuItem) => {
   navigateTo(
-    `/order?userId=${userId}&userName=${userName}&item=${menuItem.id}&name=${encodeURIComponent(menuItem.name)}&price=${menuItem.price}`
+    `/order?userId=${userId.value}&userName=${userName.value}&item=${menuItem.id}&name=${encodeURIComponent(menuItem.name)}&price=${menuItem.price}`
   );
 };
 </script>
