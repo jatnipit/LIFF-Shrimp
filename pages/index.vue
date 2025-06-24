@@ -89,7 +89,16 @@ const profile = await $liff
 
 const handleOrder = (menuItem) => {
   navigateTo(
-    `/order?userId=${userId.value}&userName=${userName.value}&item=${menuItem.id}&name=${encodeURIComponent(menuItem.name)}&price=${menuItem.price}`
+    {
+      path: "/order",
+      query: {
+        userId: userId.value,
+        userName: userName.value,
+        item: menuItem.id,
+        name: encodeURIComponent(menuItem.name),
+        price: menuItem.price,
+      },
+    }
   );
 };
 </script>

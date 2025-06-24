@@ -31,6 +31,7 @@ export default defineNuxtConfig({
       liffId: process.env.LIFF_ID,
       promptpayPhoneNumber: process.env.PROMPTPAY_PHONE_NUMBER,
       ngrokDomain: process.env.NGROK_DOMAIN,
+      lineAccessToken: process.env.LINE_ACCESS_TOKEN,
     },
   },
 

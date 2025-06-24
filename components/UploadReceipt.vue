@@ -20,6 +20,13 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  userId: {
+    type: Object,
+    required: true,
+  },
+});
+
 const fileInput = ref(null);
 const selectedFile = ref(null);
 const previewUrl = ref(null);
@@ -59,9 +66,10 @@ const uploadFile = async () => {
 
   const formData = new FormData();
   formData.append("image", selectedFile.value);
+  formData.append("userId", props.userId);
 
   try {
-    const response = await fetch("/api/upload", {
+    const response = await fetch("/api/receipt/upload", {
       headers: {
         "ngrok-skip-browser-warning": "true",
       },

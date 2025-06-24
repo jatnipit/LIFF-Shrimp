@@ -16,6 +16,7 @@
 
     <UploadReceipt
       ref="uploadReceiptRef"
+      :user-id="route.query.userId"
       @upload="handleImageUpload"
       @file-selected="handleFileSelection"
       @clear-selection="handleImageClear"
@@ -144,6 +145,81 @@ const sendOrderToN8N = async (imageUrl = null) => {
   }
 };
 
+const sendOrderSummary = async (receiptUrl) => {
+  try {
+    const orderData = createOrderData(receiptUrl);
+
+    const response = await fetch("/api/line/order-summary", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to send order data");
+    }
+
+    console.log("Order data sent successfully");
+  } catch (error) {
+    console.error("Error sending data: ", error);
+    throw error;
+  }
+};
+
+const placeOrder = async (receiptUrl) => {
+  try {
+    const orderData = createOrderData(receiptUrl);
+
+    const response = await fetch("/api/line/place-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to place order");
+    }
+
+    console.log("Order placed successfully");
+  } catch (error) {
+    console.error("Error placing order: ", error);
+    throw error;
+  }
+};
+
+const createOrderData = (receiptUrl) => {
+  const now = new Date();
+  const timestamp = now
+    .toLocaleString("th-TH", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+    .replace(",", "/");
+
+  return {
+    userId: route.query.userId,
+    userName: route.query.userName,
+    order: {
+      id: route.query.item,
+      name: decodeURIComponent(route.query.name),
+      price: route.query.price,
+    },
+    address: route.query.address,
+    paymentMethod: "พร้อมเพย์",
+    timestamp: timestamp,
+    receiptUrl: receiptUrl,
+    requestType: "order",
+  };
+};
+
 const confirmPayment = async () => {
   if (isProcessing.value) return;
 
@@ -155,16 +231,19 @@ const confirmPayment = async () => {
   isProcessing.value = true;
   statusMessage.value = null;
 
-  try {
-    let receiptUrl = useRuntimeConfig().public.ngrokDomain;
+  let receiptUrl = useRuntimeConfig().public.ngrokDomain;
+  let imagePath = null;
 
+  try {
     if (uploadReceiptRef.value?.hasFile) {
       statusMessage.value = { type: "info", text: "กำลังอัปโหลดสลิป..." };
-      const imagePath = await uploadReceiptRef.value.uploadFile();
+      imagePath = await uploadReceiptRef.value.uploadFile();
+      // console.log(imagePath);
       receiptUrl = receiptUrl + imagePath;
     }
 
-    await sendOrderToN8N(receiptUrl);
+    // await sendOrderToN8N(receiptUrl);
+    await sendOrderSummary(receiptUrl);
 
     statusMessage.value = { type: "success", text: "ยืนยันการชำระเงินสำเร็จ!" };
 
@@ -174,6 +253,16 @@ const confirmPayment = async () => {
       $liff.closeWindow();
     }
   } catch (error) {
+    if (imagePath) {
+      await fetch("/api/receipt/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imagePath }),
+      });
+    }
+
     console.error("Error during payment confirmation:", error);
     statusMessage.value = {
       type: "error",
