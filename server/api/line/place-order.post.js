@@ -114,6 +114,30 @@ export default defineEventHandler(async (event) => {
                 },
               ],
             },
+            footer: {
+              type: "box",
+              layout: "vertical",
+              spacing: "sm",
+              contents: [
+                {
+                  type: "button",
+                  style: "primary",
+                  color: "#1DB446",
+                  action: {
+                    type: "postback",
+                    label: "พร้อมส่ง",
+                    data: JSON.stringify({
+                      action: "confirmOrder",
+                      menu: body.order.name,
+                      price: body.order.price,
+                      userName: body.userName,
+                      address: body.address,
+                    }),
+                    displayText: "พร้อมส่ง",
+                  },
+                },
+              ],
+            },
             styles: {
               body: {
                 separator: true,
@@ -122,9 +146,13 @@ export default defineEventHandler(async (event) => {
               header: {
                 backgroundColor: "#E6F5EA",
               },
+              footer: {
+                backgroundColor: "#F9F9F9",
+              },
             },
           },
         },
+
         {
           type: "image",
           originalContentUrl: body.receiptUrl,
