@@ -13,11 +13,11 @@ export default defineEventHandler(async (event) => {
     }
 
     const messagePayload = {
-      to: "U0ed9e278767e8095adcbdf0980d4fbd7",
+      to: body.userId,
       messages: [
         {
           type: "flex",
-          altText: "สรุปรายการคำสั่งซื้อ",
+          altText: "อาหารของคุณกำลังไปส่ง",
           contents: {
             type: "bubble",
             header: {
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
               contents: [
                 {
                   type: "text",
-                  text: "คำสั่งซื้อ",
+                  text: `สถานะ: ${body.status}`,
                   weight: "bold",
                   size: "xl",
                   color: "#1DB446",
@@ -54,13 +54,6 @@ export default defineEventHandler(async (event) => {
                       type: "text",
                       text: `ราคา: ${body.order.price} บาท`,
                       size: "md",
-                    },
-                    {
-                      type: "text",
-                      text: "สถานะ: ชำระเงินเรียบร้อย",
-                      color: "#00C300",
-                      size: "md",
-                      weight: "bold",
                     },
                   ],
                 },
@@ -114,21 +107,17 @@ export default defineEventHandler(async (event) => {
                 },
               ],
             },
+
             styles: {
+              header: {
+                backgroundColor: "#E6F5EA",
+              },
               body: {
                 separator: true,
                 backgroundColor: "#F9F9F9",
               },
-              header: {
-                backgroundColor: "#E6F5EA",
-              },
             },
           },
-        },
-        {
-          type: "image",
-          originalContentUrl: body.receiptUrl,
-          previewImageUrl: body.receiptUrl,
         },
       ],
     };
@@ -139,20 +128,15 @@ export default defineEventHandler(async (event) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${LINE_CHANNEL_ACCESS_TOKEN}`,
       },
-      body: JSON.stringify(messagePayload),
+      body: messagePayload,
     });
 
     return {
-      status: "success",
-      message: "Order summary sent successfully",
+      message: `${body.status} status sent successfully `,
       data: response,
     };
   } catch (error) {
-    console.error("Error sending LINE message:", error);
-
-    throw createError({
-      statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Failed to send order summary",
-    });
+    console.error("Error sending order status:", error);
+    return { error: "Failed to send order status" };
   }
 });

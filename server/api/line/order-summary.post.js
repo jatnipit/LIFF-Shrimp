@@ -1,6 +1,7 @@
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
+    console.log(body);
 
     if (
       !body.userId ||
@@ -36,7 +37,7 @@ export default defineEventHandler(async (event) => {
       ],
     };
 
-    const response = await fetch(LINE_API_URL, {
+    const response = await $fetch(LINE_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,9 +54,8 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     console.error("Error sending LINE message:", error);
 
-    throw createError({
-      statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Failed to send order summary",
-    });
+    return {
+      error: error.message || "An error occurred while sending the message",
+    };
   }
 });

@@ -16,7 +16,7 @@
 
     <UploadReceipt
       ref="uploadReceiptRef"
-      :user-id="route.query.userId"
+      :userId="route.query.userId"
       @upload="handleImageUpload"
       @file-selected="handleFileSelection"
       @clear-selection="handleImageClear"
@@ -145,9 +145,9 @@ const sendOrderToN8N = async (imageUrl = null) => {
   }
 };
 
-const sendOrderSummary = async (receiptUrl) => {
+const sendOrderSummary = async () => {
   try {
-    const orderData = createOrderData(receiptUrl);
+    const orderData = createOrderData();
 
     const response = await fetch("/api/line/order-summary", {
       method: "POST",
@@ -191,7 +191,7 @@ const placeOrder = async (receiptUrl) => {
   }
 };
 
-const createOrderData = (receiptUrl) => {
+const createOrderData = (receiptUrl = "") => {
   const now = new Date();
   const timestamp = now
     .toLocaleString("th-TH", {
@@ -238,12 +238,13 @@ const confirmPayment = async () => {
     if (uploadReceiptRef.value?.hasFile) {
       statusMessage.value = { type: "info", text: "กำลังอัปโหลดสลิป..." };
       imagePath = await uploadReceiptRef.value.uploadFile();
-      // console.log(imagePath);
       receiptUrl = receiptUrl + imagePath;
     }
 
     // await sendOrderToN8N(receiptUrl);
     await sendOrderSummary(receiptUrl);
+
+    await placeOrder(receiptUrl);
 
     statusMessage.value = { type: "success", text: "ยืนยันการชำระเงินสำเร็จ!" };
 

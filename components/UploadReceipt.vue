@@ -22,7 +22,7 @@
 <script setup>
 const props = defineProps({
   userId: {
-    type: Object,
+    type: String,
     required: true,
   },
 });
